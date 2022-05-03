@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 // creating database pool
 const pool = mysql.createPool ({
+    connectionLimit: 50,
     host: "localhost",
     user: "root",
     password: "",
@@ -8,10 +9,11 @@ const pool = mysql.createPool ({
 });
 //exporting connection
 exports.getConnection = function(callback) {
-  pool.getConnection(function(err, connection) {
+  pool.getConnection(function(err, conn) {
       if(err) {
+        conn.release();
         return callback(err);
       }
-      callback(err, connection);
+      callback(err, conn);
     });
   };
