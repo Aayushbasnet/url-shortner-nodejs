@@ -75,6 +75,9 @@
 		.list table tbody tr:nth-child(odd){
 			background: #eee;
 		}
+		.result{
+
+		}
 	</style>
 </head>
 <body>
@@ -85,16 +88,21 @@
         <div class="form">
             <div class="form-element">
                 <label for="longurl">Enter link</label>
-                <input type="url" id="longurl" name="userUrl" placeholder="http://site.com">
+                <input type="url" id="longurl" name="userUrl" placeholder="http://site.com" value="<%= locals.data.originalUrl %> ">
             </div>
+            <div class="result">
+				<p>Link:
+					<a href="<%= locals.data.originalUrl %>" id="short-url" target="_blank"> 
+						<%= locals.data.shortUrl %>
+					</a>
+				</p>
+			</div>
             <div class="form-element">
                 <button type="submit" id="create-short-url">Create Short URL</button>
             </div>
         </div>
     </form>
-        <div class="result">
-            <a href="#" id="short-url" target="_blank"></a>
-        </div>
+        
     
     <div class="list">
         <h2>Shorten links</h2>
@@ -103,20 +111,20 @@
                 <tr>
                     <th>LongURL</th>
                     <th>ShortURL</th>
-                    <th>Count</th>
+                    <th>UrlKey</th>
                 </tr>
             </thead>
             <tbody>
-                <% for(let i = 0; i<data.length; i++){ %>
+                <% for(let i = 0; i<data.rows.length; i++){ %>
                     <tr>
                         <td>
-                            <%= data[i].OriginalUrl %>
+                            <%= data.rows[i].OriginalUrl %>
                         </td>
                         <td>
-                            <%= data[i].ShortenUrl %>
+                            <%= data.rows[i].ShortenUrl %>
                         </td>
                         <td>
-                            <%= data[i].UrlKey %>
+                            <%= data.rows[i].UrlKey %>
                         </td>
                     </tr>
                 <% } %>
