@@ -15,7 +15,6 @@ router.get('/', (req,res) => {
 router.post('/', (req,res) => {
     let originalUrl:string = req.body.userUrl.trim();   //original url from form
     let spaceChecker:RegExp = /\s/gi;
-    console.log(spaceChecker.test(originalUrl));
     if(spaceChecker.test(originalUrl)== false){
         if(originalUrl.length !== 0){
             try {
@@ -33,7 +32,7 @@ router.post('/', (req,res) => {
                                 status: "notoken",
                                 message: "Something went wrong"
                             });
-                            console.log("Cannot insert data into database", error);
+                            // console.log("Cannot insert data into database", error);
                             throw error;
                         }else{
                             console.log("Inserted successfully \n");
@@ -46,10 +45,19 @@ router.post('/', (req,res) => {
                 console.log(error);
             };
         }else{
+            req.session.originalUrl = originalUrl;
+            req.session.errorMessage = {
+            status: true,
+            message: "Invalid Url ! Empty field"
+        };
             res.redirect('/');
         }
     }else{
         req.session.originalUrl = originalUrl;
+        req.session.errorMessage = {
+            status: true,
+            message: "Invalid Url ! Please check spaces between url"
+        };
         res.redirect('/');
     }
 

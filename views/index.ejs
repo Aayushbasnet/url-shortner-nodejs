@@ -75,8 +75,28 @@
 		.list table tbody tr:nth-child(odd){
 			background: #eee;
 		}
-		.result{
+		.error-message{
+			width: auto;
+			height: auto;
+			padding: 4px;
+			text-align: center;
+			background-color: #ff3333;
+		}
+		#close-error{
+			width: 30px;
+			height: 20px;
+			float: right;
+			color: white;
+			text-align: center;
+			font-weight: bolder;
+			cursor: pointer;
+			transition:ease-in-out 0.4s;
+			display: block;
 
+		}
+		#close-error:hover{
+			transition:ease-in-out 0.2s;
+			transform: rotate(90deg);
 		}
 	</style>
 </head>
@@ -84,6 +104,14 @@
     <div class="header">
         URL Shortner
     </div>
+	<% if (locals.data.errorMessage){ %> 
+		<div class ="error-message">
+			<div id="close-error"> 
+				X
+			</div>
+			<%= locals.data.errorMessage.message %> 
+		</div>
+	<% } %> 
     <form action="/shorten", method="POST">
         <div class="form">
             <div class="form-element">
@@ -91,7 +119,7 @@
                 <input type="url" id="longurl" name="userUrl" placeholder="http://site.com" value="<%= locals.data.originalUrl %> ">
             </div>
             <div class="result">
-				<p>Link:
+				<p>Short Link:
 					<a href="<%= locals.data.originalUrl %>" id="short-url" target="_blank"> 
 						<%= locals.data.shortUrl %>
 					</a>
@@ -137,16 +165,15 @@
         crossorigin="anonymous">
     </script> 
     
-    <!-- <script>
-        const submitBtn = document.querySelector('#create-short-url');
-        submitBtn.addEventListener("click", () =>{
-            const longurl = document.querySelector('#longurl').value.trim();
-                    if(longurl.length == 0) {
-                        
-                    }
+    <script>
+        const errorCrossBtn = document.querySelector('#close-error');
+		const errorMsg = document.querySelector('.error-message');
+        errorCrossBtn.addEventListener("click", () =>{
+            errorMsg.style.display = "none";
+			console.log("I am here", errorMsg);
         });
         
-    </script> -->
+    </script>
     
 </body>
 </html>
