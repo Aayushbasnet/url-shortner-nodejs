@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 
-import express from 'express';
-import { Connection } from "mysql";
+const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mysqlConnection = require('./config/mySqlConnection');
+
 const session = require('express-session');
 app.use(session({
     secret: 'secret-key',
@@ -16,7 +16,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended : true})); // bodyParser can be replaced with express as well
 app.use(bodyParser.json());
 
-app.get('/', (req: Request, res: Response) =>{
+app.get('/', (req, res) =>{
     // session value
     const shortUrl = req.session.shortUrl;
     const originalUrl = req.session.originalUrl;
@@ -55,10 +55,10 @@ app.get('/', (req: Request, res: Response) =>{
 const shortenRoute = require('./routes/shorten');
 app.use('/shorten', shortenRoute);
 
-app.get('/:urlKey', (req: Request, res: Response) => {
+app.get('/:urlKey', (req, res) => {
     const key = req.params.urlKey;
     // console.log(key);
-    mysqlConnection.getConnection((error: Error, conn: Connection) => {
+    mysqlConnection.getConnection((error, conn) => {
         if(!!error){
             // console.log("Cannot get Connection", error);
             res.status(500).json({

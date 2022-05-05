@@ -1,5 +1,4 @@
 import { Request, response, Response } from "express";
-import { Connection } from "mysql";
 
 const express = require('express');
 const router = express.Router();
@@ -11,11 +10,11 @@ router.use(session({
     saveUninitialized: false,
 }))
 
-router.get('/', (req: Request,res: Response) => {
+router.get('/', (req, res) => {
     res.send(`Hi I am going to shorten ${req.body.userUrl}`);
 });
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', (req, res) => {
     let originalUrl:string = req.body.userUrl.trim();   //original url from form
     let spaceChecker:RegExp = /\s/gi;
     if(spaceChecker.test(originalUrl)== false){
@@ -27,7 +26,7 @@ router.post('/', (req: Request, res: Response) => {
                 req.session.shortUrl = "http://localhost:5000/"+uniqueId;    
                 req.session.originalUrl = originalUrl;
                 // inserting value in database
-                mysqlConnection.getConnection((error: Error, conn: Connection) => {
+                mysqlConnection.getConnection((error, conn) => {
                     const dbquery:string = `INSERT INTO urlshortners (OriginalUrl, ShortenUrl, UrlKey) VALUES ("${originalUrl}", "http://localhost:5000/${uniqueId}","${uniqueId}")`;
                     conn.query(dbquery,(error: Error, rows: object, fields: object) =>{
                         if(!!error){
@@ -43,7 +42,7 @@ router.post('/', (req: Request, res: Response) => {
                         };
                     });
                 });        
-            } catch (error: Error | unknown) {
+            } catch (error) {
                 res.sendStatus(500);
                 console.log(error);
             };

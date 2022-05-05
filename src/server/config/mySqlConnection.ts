@@ -11,7 +11,7 @@ const pool = mysql.createPool ({
 });
 //exporting connection
 exports.getConnection = function(callback) {
-  pool.getConnection(function(err: Error, conn: Connection) {
+  pool.getConnection(function(err, conn) {
       if(err) {
         conn.release();
         return callback(err);
