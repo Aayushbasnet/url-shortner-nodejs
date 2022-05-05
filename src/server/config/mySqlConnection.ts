@@ -1,3 +1,5 @@
+import { Connection } from "mysql";
+
 const mysql = require("mysql");
 // creating database pool
 const pool = mysql.createPool ({
@@ -9,7 +11,7 @@ const pool = mysql.createPool ({
 });
 //exporting connection
 exports.getConnection = function(callback) {
-  pool.getConnection(function(err, conn) {
+  pool.getConnection(function(err: Error, conn: Connection) {
       if(err) {
         conn.release();
         return callback(err);

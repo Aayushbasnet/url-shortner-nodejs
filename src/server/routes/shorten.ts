@@ -1,6 +1,9 @@
+import { Request, response, Response } from "express";
+import { Connection } from "mysql";
+
 const express = require('express');
 const router = express.Router();
-const mysqlConnection = require('../modules/mySqlConnection');
+const mysqlConnection = require('../config/mySqlConnection');
 const session = require('express-session');
 router.use(session({
     secret: 'secret-key',
@@ -8,11 +11,11 @@ router.use(session({
     saveUninitialized: false,
 }))
 
-router.get('/', (req,res) => {
+router.get('/', (req: Request,res: Response) => {
     res.send(`Hi I am going to shorten ${req.body.userUrl}`);
 });
 
-router.post('/', (req,res) => {
+router.post('/', (req: Request, res: Response) => {
     let originalUrl:string = req.body.userUrl.trim();   //original url from form
     let spaceChecker:RegExp = /\s/gi;
     if(spaceChecker.test(originalUrl)== false){
@@ -24,9 +27,9 @@ router.post('/', (req,res) => {
                 req.session.shortUrl = "http://localhost:5000/"+uniqueId;    
                 req.session.originalUrl = originalUrl;
                 // inserting value in database
-                mysqlConnection.getConnection((error, conn) => {
+                mysqlConnection.getConnection((error: Error, conn: Connection) => {
                     const dbquery:string = `INSERT INTO urlshortners (OriginalUrl, ShortenUrl, UrlKey) VALUES ("${originalUrl}", "http://localhost:5000/${uniqueId}","${uniqueId}")`;
-                    conn.query(dbquery,(error, rows,) =>{
+                    conn.query(dbquery,(error: Error, rows: object, fields: object) =>{
                         if(!!error){
                             res.sendStatus(500).json({
                                 status: "notoken",
@@ -40,18 +43,18 @@ router.post('/', (req,res) => {
                         };
                     });
                 });        
-            } catch (error) {
+            } catch (error: Error | unknown) {
                 res.sendStatus(500);
                 console.log(error);
             };
         }else{
             req.session.originalUrl = originalUrl;
             req.session.errorMessage = {
-            status: true,
-            message: "Invalid Url ! Empty field"
-        };
+                status: true,
+                message: "Invalid Url ! Empty field"
+            };
             res.redirect('/');
-        }
+        };
     }else{
         req.session.originalUrl = originalUrl;
         req.session.errorMessage = {

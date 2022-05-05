@@ -1,9 +1,10 @@
-import { connect } from "http2";
+import { Request, Response } from "express";
 
-const express = require('express');
+import express from 'express';
+import { Connection } from "mysql";
 const app = express();
 const bodyParser = require('body-parser');
-const mysqlConnection = require('../modules/mySqlConnection');
+const mysqlConnection = require('./config/mySqlConnection');
 const session = require('express-session');
 app.use(session({
     secret: 'secret-key',
@@ -11,12 +12,11 @@ app.use(session({
     saveUninitialized: false,
 }))
 
-
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended : true})); // bodyParser can be replaced with express as well
 app.use(bodyParser.json());
 
-app.get('/', (req, res) =>{
+app.get('/', (req: Request, res: Response) =>{
     // session value
     const shortUrl = req.session.shortUrl;
     const originalUrl = req.session.originalUrl;
@@ -52,13 +52,13 @@ app.get('/', (req, res) =>{
     
 });
 
-const shortenRoute = require('../routes/shorten');
+const shortenRoute = require('./routes/shorten');
 app.use('/shorten', shortenRoute);
 
-app.get('/:urlKey', (req, res) => {
+app.get('/:urlKey', (req: Request, res: Response) => {
     const key = req.params.urlKey;
-    console.log(key);
-    mysqlConnection.getConnection((error, conn) => {
+    // console.log(key);
+    mysqlConnection.getConnection((error: Error, conn: Connection) => {
         if(!!error){
             // console.log("Cannot get Connection", error);
             res.status(500).json({
@@ -68,7 +68,7 @@ app.get('/:urlKey', (req, res) => {
         }else{
             const dbquery : string = 
                 `SELECT OriginalUrl FROM urlshortners WHERE UrlKey = "${key}"`;
-            conn.query(dbquery, (error, rows, fields) => {
+            conn.query(dbquery, (error: Error, rows: object, fields: object) => {
                 if(!!error){
                     // console.log("Query error", error);
                     res.status(500).json({
@@ -78,6 +78,10 @@ app.get('/:urlKey', (req, res) => {
                 }else{
                     // console.log("Original Url: ", rows);
                     if(rows[0] == null){
+                        req.session.errorMessage = {
+                            status: true,
+                            message: "Url doesnot exists"
+                        };
                         res.redirect('/');
                     } else{
                         res.redirect(`${rows[0].OriginalUrl}`); 
