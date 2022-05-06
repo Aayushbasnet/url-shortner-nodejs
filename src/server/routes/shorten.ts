@@ -10,9 +10,9 @@ router.use(session({
     saveUninitialized: false,
 }))
 
-// router.get('/', (req, res) => {
-//     res.send(`Hi I am going to shorten ${req.body.userUrl}`);
-// });
+router.get('/', (req, res) => {
+    res.redirect('/');
+});
 
 router.post('/', (req, res) => {
     let originalUrl:string = req.body.userUrl.trim();   //original url from form

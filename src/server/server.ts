@@ -18,6 +18,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended : true})); // bodyParser can be replaced with express as well
 app.use(bodyParser.json());
 
+// homepage route
 app.get('/', (req, res) =>{
     // session value
     const shortUrl = req.session.shortUrl;
@@ -26,6 +27,7 @@ app.get('/', (req, res) =>{
     delete req.session.shortUrl;
     delete req.session.originalUrl;
     delete req.session.errorMessage;
+    // console.log("Path:",__dirname);
     
     // database connection
     mysqlConnection.getConnection((error, conn) =>{
@@ -45,7 +47,7 @@ app.get('/', (req, res) =>{
                         // console.log("Failed to retrieve data", error);
                         res.render("index", {data:error});
                     }else{
-                        console.log(rows);
+                        // console.log(rows);
                         res.render("index", {data:{rows, shortUrl, originalUrl, errorMessage}});  // rows:rows are same show only rows
                         // parse rows/fields
                     };
@@ -58,14 +60,22 @@ app.get('/', (req, res) =>{
             });
             console.log(error);
         };
-
     });
-    
 });
 
+// shorten route
 const shortenRoute = require('./routes/shorten');
 app.use('/shorten', shortenRoute);
 
+// register route
+const registerRoute = require('./routes/register');
+app.use('/register', registerRoute); 
+
+// login route
+const loginRoute = require('./routes/login');
+app.use('/login', loginRoute);
+
+//get original url route
 app.get('/:urlKey', (req, res) => {
     const key = req.params.urlKey;
     // console.log(key);
