@@ -146,13 +146,13 @@
                 <% for(let i = 0; i<data.rows.length; i++){ %>
                     <tr>
                         <td>
-                            <%= data.rows[i].OriginalUrl %>
+                            <%= data.rows[i].originalUrl %>
                         </td>
                         <td>
-                            <%= data.rows[i].ShortenUrl %>
+                            <%= data.rows[i].shortUrl %>
                         </td>
                         <td>
-                            <%= data.rows[i].UrlKey %>
+                            <%= data.rows[i].urlKey %>
                         </td>
                     </tr>
                 <% } %>
@@ -172,7 +172,6 @@
             errorMsg.style.display = "none";
 			console.log("I am here", errorMsg);
         });
-        
     </script>
     
 </body>

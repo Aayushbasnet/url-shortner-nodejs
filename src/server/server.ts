@@ -12,6 +12,8 @@ app.use(session({
     saveUninitialized: false,
 }))
 
+// const path = require ('path');
+app.set('views', __dirname + '/views');
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended : true})); // bodyParser can be replaced with express as well
 app.use(bodyParser.json());
@@ -28,25 +30,34 @@ app.get('/', (req, res) =>{
     // database connection
     mysqlConnection.getConnection((error, conn) =>{
         // database queries
-        if(!!error){
-            // console.log("Cannot get connection");
-            res.status(500).json({
-                status: "No connection",
-                message: "Failed to connect database"
+        try{
+
+            if(!!error){
+                // console.log("Cannot get connection");
+                res.status(500).json({
+                    status: "No connection",
+                    message: "Failed to connect database"
+                });
+            }else{
+                const dbquery: string = "SELECT * FROM urlshortners";
+                conn.query(dbquery, (error, rows, fields) => {
+                    if(!!error){
+                        // console.log("Failed to retrieve data", error);
+                        res.render("index", {data:error});
+                    }else{
+                        console.log(rows);
+                        res.render("index", {data:{rows, shortUrl, originalUrl, errorMessage}});  // rows:rows are same show only rows
+                        // parse rows/fields
+                    };
+                });
+            }
+        }catch(error){
+            res.sendStatus(500).json({
+                status: error,
+                message: "bad"
             });
-        }else{
-            const dbquery: string = "SELECT * FROM urlshortners";
-            conn.query(dbquery, (error, rows, fields) => {
-                if(!!error){
-                    // console.log("Failed to retrieve data", error);
-                    res.render("index", {data:error});
-                }else{
-                    // console.log("retrived successfully \n");
-                    res.render("index", {data:{rows, shortUrl, originalUrl, errorMessage}});  // rows:rows are same show only rows
-                    // parse rows/fields
-                };
-            });
-        }
+            console.log(error);
+        };
 
     });
     

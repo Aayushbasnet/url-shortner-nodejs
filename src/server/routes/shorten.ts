@@ -10,9 +10,9 @@ router.use(session({
     saveUninitialized: false,
 }))
 
-router.get('/', (req, res) => {
-    res.send(`Hi I am going to shorten ${req.body.userUrl}`);
-});
+// router.get('/', (req, res) => {
+//     res.send(`Hi I am going to shorten ${req.body.userUrl}`);
+// });
 
 router.post('/', (req, res) => {
     let originalUrl:string = req.body.userUrl.trim();   //original url from form
@@ -26,9 +26,9 @@ router.post('/', (req, res) => {
                 req.session.shortUrl = "http://localhost:5000/"+uniqueId;    
                 req.session.originalUrl = originalUrl;
                 // inserting value in database
-                mysqlConnection.getConnection((error, conn) => {
-                    const dbquery:string = `INSERT INTO urlshortners (OriginalUrl, ShortenUrl, UrlKey) VALUES ("${originalUrl}", "http://localhost:5000/${uniqueId}","${uniqueId}")`;
-                    conn.query(dbquery,(error: Error, rows: object, fields: object) =>{
+                mysqlConnection.getConnection((error: Error, conn) => {
+                    const dbquery:string = `INSERT INTO urlshortners (originalUrl, shortUrl, urlKey, userId) VALUES ("${originalUrl}", "http://localhost:5000/${uniqueId}","${uniqueId}",1)`;
+                    conn.query(dbquery,(error: Error, rows, fields) =>{
                         if(!!error){
                             res.sendStatus(500).json({
                                 status: "notoken",
@@ -43,7 +43,10 @@ router.post('/', (req, res) => {
                     });
                 });        
             } catch (error) {
-                res.sendStatus(500);
+                res.sendStatus(500).json({
+                    status: error,
+                    message: "bad"
+                });
                 console.log(error);
             };
         }else{
