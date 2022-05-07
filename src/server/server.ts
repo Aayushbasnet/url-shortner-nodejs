@@ -33,7 +33,6 @@ app.get('/', (req, res) =>{
     mysqlConnection.getConnection((error, conn) =>{
         // database queries
         try{
-
             if(!!error){
                 // console.log("Cannot get connection");
                 res.status(500).json({

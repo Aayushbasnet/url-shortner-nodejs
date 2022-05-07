@@ -1,4 +1,4 @@
-import { Connection } from "mysql";
+// import { Connection } from "mysql";
 
 const mysql = require("mysql");
 // creating database pool
