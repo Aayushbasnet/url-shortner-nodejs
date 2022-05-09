@@ -1,6 +1,6 @@
 // import { Connection } from "mysql";
-
-const mysql = require("mysql");
+import * as mysql from "mysql";
+// const mysql = require("mysql");
 // creating database pool
 const pool = mysql.createPool ({
     connectionLimit: 50,

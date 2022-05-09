@@ -30,16 +30,16 @@ router.post('/', (req, res) =>{
                 if(!!error){
                     console.log("Error: ", error);
                     throw "Connection error";
-                    // res.sendStatus(500).json({
-                    //     status: "no connection",
-                    //     message: "Failed to connect database"
-                    // });
                 }else{
                     const dbquery: string = `SELECT * FROM users WHERE email = '${email}' AND userPassword = '${password}'`;
+                    console.log("dbquery: ",dbquery)
                     conn.query(dbquery, (error, rows, fields) =>{
                         if(!!error){
                             console.log("Error here",error);
-                            req.session.message = "Invalid email or password";
+                            req.session.errorMessage = {
+                                status: true,
+                                message: "Invalid email or password"
+                            };
                             res.redirect('/login');
                         }else{
                             // let token: string = Math.random().toString(32).replace(/[^a-z0-9]/gi, '').substring(2,10);
@@ -59,12 +59,15 @@ router.post('/', (req, res) =>{
                 console.log(error);
                 res.sendStatus(500).json({
                     status: "Error",
-                    message: error
+                    message: "Something went wrong"
                 });
             }
         });
     }else{
-        req.session.message = "Invalid email or password";
+        req.session.errorMessage = {
+            status: true,
+            message: "Invalid email or password"
+        };
         req.redirect('/login');
         console.log("Invalid credentials");
     };

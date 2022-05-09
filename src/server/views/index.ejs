@@ -118,21 +118,21 @@
 		<% } %>
         <span class="title">URL Shortner</span>
 		<% if (locals.data.loggedIn == true) { %> 
-			<a href="#">Logout</a>
+			<a href="/logout">Logout</a>
 		<% }else{ %>
 			<a href="/login">Login</a>
 		<% } %>
     </div>
-	<% if (locals.data.loggedIn == true) { %>
 		<% if (locals.data.errorMessage){ %> 
-			<div class ="error-message">
-				<div id="close-error"> 
-					X
+			<% if(locals.data.errorMessage.status == true) {%> 
+				<div class ="error-message">
+					<div id="close-error"> 
+						X
+					</div>
+					<%= locals.data.errorMessage.message %> 
 				</div>
-				<%= locals.data.errorMessage.message %> 
-			</div>
-		<% } %>
-	<% } %> 
+			<% } %> 	
+		<% } %> 
     <form action="/shorten", method="POST">
         <div class="form">
             <div class="form-element">

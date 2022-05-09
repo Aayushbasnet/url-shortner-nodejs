@@ -16,7 +16,8 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const loggedIn = req.session.loggedIn;
-    const userId = req.session.userId;
+    const userId = req.session.user.id;
+    console.log(" I am user",userId);
     if(loggedIn == true){
         let originalUrl:string = req.body.userUrl.trim();   //original url from form
         let spaceChecker:RegExp = /\s/gi;
@@ -28,17 +29,16 @@ router.post('/', (req, res) => {
                     // storing uniqueid in session
                     req.session.shortUrl = "http://localhost:5000/"+uniqueId;    
                     req.session.originalUrl = originalUrl;
+                    console.log(uniqueId, req.session.shortUrl, req.session.originalUrl)
                     // inserting value in database
                     mysqlConnection.getConnection((error: Error, conn) => {
-                        const dbquery:string = `INSERT INTO urlshortners (originalUrl, shortUrl, urlKey, userId) VALUES ("${originalUrl}", "http://localhost:5000/${uniqueId}","${uniqueId}",1)`;
-                        conn.query(dbquery,(error: Error, rows, fields) =>{
+                        const dbquery:string = `INSERT INTO urlshortners (originalUrl, shortUrl, urlKey, userId) VALUES ("${originalUrl}", "http://localhost:5000/${uniqueId}","${uniqueId}","${userId}")`;
+                        conn.query(dbquery,(error, rows, fields) =>{
                             if(!!error){
-                                res.sendStatus(500).json({
-                                    status: "notoken",
-                                    message: "Something went wrong"
-                                });
+                                console.log("Error", error);
+                                throw "Cannot insert data";
                                 // console.log("Cannot insert data into database", error);
-                                throw error;
+                                // throw error;
                             }else{
                                 console.log("Inserted successfully \n");
                                 res.redirect("/");
@@ -46,11 +46,11 @@ router.post('/', (req, res) => {
                         });
                     });        
                 } catch (error) {
-                    res.sendStatus(500).json({
-                        status: error,
-                        message: "bad"
-                    });
                     console.log(error);
+                    res.sendStatus(500).json({
+                        status: "notoken",
+                        message: "Something went wrong"
+                    });
                 };
             }else{
                 req.session.originalUrl = originalUrl;

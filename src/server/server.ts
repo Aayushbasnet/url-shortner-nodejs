@@ -1,16 +1,18 @@
-import { Request, Response } from "express";
-
-const express = require('express');
+import * as express from "express";
+import * as session from "express-session";
+import { Connection, MysqlError } from "mysql";
+// const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mysqlConnection = require('./config/mySqlConnection');
 
-const session = require('express-session');
+// const session = require('express-session');
 app.use(session({
     secret: 'secret-key',
     resave: false,
     saveUninitialized: false,
-}))
+    
+}));
 
 // const path = require ('path');
 app.set('views', __dirname + '/views');
@@ -19,13 +21,15 @@ app.use(bodyParser.urlencoded({extended : true})); // bodyParser can be replaced
 app.use(bodyParser.json());
 
 // homepage route
-app.get('/', (req, res) =>{
+app.get('/', (req: express.Request, res: express.Response) =>{
     // session value
-    const shortUrl : string = req.session.shortUrl;
-    const originalUrl : string = req.session.originalUrl;
-    const errorMessage : string = req.session.errorMessage;
-    const user : any = req.session.user;
-    const loggedIn : boolean = req.session.loggedIn;
+    
+    // const expressSession = req.session;
+    const shortUrl   = req.session.shortUrl;
+    const originalUrl  = req.session.originalUrl;
+    const errorMessage  = req.session.errorMessage;
+    const user  = req.session.user;
+    const loggedIn = req.session.loggedIn;
 
     delete req.session.shortUrl;
     delete req.session.originalUrl;
@@ -34,7 +38,7 @@ app.get('/', (req, res) =>{
     
     if(loggedIn == true){
         // database connection
-        mysqlConnection.getConnection((error, conn) =>{
+        mysqlConnection.getConnection((error : MysqlError, conn ) =>{
             // database queries
             try{
                 if(!!error){
@@ -70,7 +74,11 @@ app.get('/', (req, res) =>{
             };
         });
     }else{
-        res.render("index", {data:{loggedIn}});
+        req.session.errorMessage = {
+            status: false,
+            message: "Not logged in"
+        };
+        res.render("index", {data:{loggedIn, errorMessage}});
     };
 });
 
@@ -86,9 +94,13 @@ app.use('/register', registerRoute);
 const loginRoute = require('./routes/login');
 app.use('/login', loginRoute);
 
+//logout route
+const logoutRoute = require('./routes/logout');
+app.use('/logout', logoutRoute);
+
 //get original url route
-app.get('/:urlKey', (req, res) => {
-    const key = req.params.urlKey;
+app.get('/:urlKey', (req: { session, params }, res: express.Response) => {
+    const key: string = req.params.urlKey;
     // console.log(key);
     mysqlConnection.getConnection((error, conn) => {
         try{
