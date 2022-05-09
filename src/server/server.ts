@@ -74,10 +74,6 @@ app.get('/', (req: express.Request, res: express.Response) =>{
             };
         });
     }else{
-        req.session.errorMessage = {
-            status: false,
-            message: "Not logged in"
-        };
         res.render("index", {data:{loggedIn, errorMessage}});
     };
 });

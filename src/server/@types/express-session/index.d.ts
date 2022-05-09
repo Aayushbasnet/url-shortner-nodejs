@@ -13,6 +13,7 @@ declare module 'express-session' {
             firstName : string
         };
         loggedIn : boolean;
+        email : string;
         // user: { [key: string]: any }
     }
 }
