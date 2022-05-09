@@ -41,7 +41,7 @@ router.post('/', (req : express.Request, res : express.Response) => {
                     throw "Unable to get connection";
                 }else{
                     let searchQuery : string = `
-                        SELECT email from users 
+                        SELECT COUNT (email) from users 
                         WHERE email = "${email}"
                     `; 
                     conn.query(searchQuery, (error, rows, fields) => {
@@ -49,7 +49,7 @@ router.post('/', (req : express.Request, res : express.Response) => {
                             console.log("Search Error:", error);
                             throw "Email already exists"
                         }else{
-                            if(rows[0] == null){
+                            if(rows.length < 1){
                                 console.log("No duplicate email", rows);
                                 let dbquery : string = `
                                         INSERT INTO users (firstName, lastName, email, phoneNumber, userPassword)

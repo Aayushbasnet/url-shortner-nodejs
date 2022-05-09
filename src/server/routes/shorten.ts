@@ -10,9 +10,9 @@ router.use(session({
     saveUninitialized: false,
 }))
 
-router.get('/', (req, res) => {
-    res.redirect('/');
-});
+// router.get('/', (req, res) => {
+//     res.redirect('/');
+// });
 
 router.post('/', (req, res) => {
     const loggedIn = req.session.loggedIn;
@@ -23,35 +23,39 @@ router.post('/', (req, res) => {
         let spaceChecker:RegExp = /\s/gi;
         if(spaceChecker.test(originalUrl)== false){
             if(originalUrl.length !== 0){
-                try {
-                    // generating random short url key
-                    const uniqueId = Math.random().toString(36).replace(/[^a-z0-9]/gi,'').substring(2,10);
-                    // storing uniqueid in session
-                    req.session.shortUrl = "http://localhost:5000/"+uniqueId;    
-                    req.session.originalUrl = originalUrl;
-                    console.log(uniqueId, req.session.shortUrl, req.session.originalUrl)
-                    // inserting value in database
-                    mysqlConnection.getConnection((error: Error, conn) => {
+                // generating random short url key
+                const uniqueId = Math.random().toString(36).replace(/[^a-z0-9]/gi,'').substring(2,10);
+                // storing uniqueid in session
+                req.session.shortUrl = "http://localhost:5000/"+uniqueId;    
+                req.session.originalUrl = originalUrl;
+                console.log(uniqueId, req.session.shortUrl, req.session.originalUrl);
+                // inserting value in database
+                mysqlConnection.getConnection((error: Error, conn) => {
+                    try {
                         const dbquery:string = `INSERT INTO urlshortners (originalUrl, shortUrl, urlKey, userId) VALUES ("${originalUrl}", "http://localhost:5000/${uniqueId}","${uniqueId}","${userId}")`;
                         conn.query(dbquery,(error, rows, fields) =>{
                             if(!!error){
-                                console.log("Error", error);
-                                throw "Cannot insert data";
-                                // console.log("Cannot insert data into database", error);
-                                // throw error;
+                                console.log("shorten insert Error :", error);
+                                delete req.session.shortUrl;
+                                req.session.errorMessage= {
+                                    status: true,
+                                    message: "Short url already exists"
+                                };
+                                res.redirect('/');
+                                // throw "Cannot insert data";
                             }else{
                                 console.log("Inserted successfully \n");
                                 res.redirect("/");
                             };
                         });
-                    });        
-                } catch (error) {
-                    console.log(error);
-                    res.sendStatus(500).json({
-                        status: "notoken",
-                        message: "Something went wrong"
-                    });
-                };
+                    } catch (error) {
+                        console.log("Catch shorten error", error);
+                        res.sendStatus(500).json({
+                            status: "notoken",
+                            message: "Something went wrong"
+                        });
+                    };
+                });            
             }else{
                 req.session.originalUrl = originalUrl;
                 req.session.errorMessage = {

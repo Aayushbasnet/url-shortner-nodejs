@@ -44,10 +44,6 @@ app.get('/', (req: express.Request, res: express.Response) =>{
                 if(!!error){
                     console.log("Error: ", error);
                     throw "connectin error";
-                    // res.status(500).json({
-                    //     status: "No connection",
-                    //     message: "Failed to connect database"
-                    // });
                 }else{
                     const dbquery: string = `SELECT  *
                         FROM urlshortners
