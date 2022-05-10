@@ -14,6 +14,9 @@ declare module 'express-session' {
         };
         loggedIn : boolean;
         email : string;
+        firstName : string;
+        lastName : string;
+        phoneNumber : number | string;
         // user: { [key: string]: any }
     }
 }

@@ -38,24 +38,24 @@
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <h3 class="register-heading">Apply as a Employee</h3>
                         <!-- Register form -->
-                        <form action="/register" method='POST'>
+                        <form action="/register" method='POST' id="registerForm">
                             <div class="row register-form">
                                 <!-- left part -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="firstName">First name</label>
-                                        <input type="text" class="form-control" placeholder="First Name *"
-                                            name="firstName" />
+                                        <input type="text" class="form-control" placeholder="First Name *" value="<%= locals.data.firstName %>"
+                                            name="firstName" required />
                                     </div>
                                     <div class="form-group">
                                         <label for="lastName">Last name</label>
-                                        <input type="text" class="form-control" placeholder="Last Name *"
-                                            name="lastName" />
+                                        <input type="text" class="form-control" placeholder="Last Name *" value="<%= locals.data.lastName %>"
+                                            name="lastName" required />
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Email</label>
                                         <input type="email" class="form-control" placeholder="Your Email *" value="<%= locals.data.email %> "
-                                            name="email" />
+                                            name="email" required />
                                     </div>
                                     
                                 </div>
@@ -64,17 +64,17 @@
                                     <div class="form-group">
                                         <label for="password">Password</label>
                                         <input type="password" class="form-control" placeholder="Password *"
-                                            name="password" />
+                                            name="password" required />
                                     </div>
                                     <div class="form-group">
                                         <label for="confirmPassword">Confirm Password</label>
                                         <input type="password" class="form-control" placeholder="Confirm Password *"
-                                            name="confirmPassword" />
+                                            name="confirmPassword" required />
                                     </div>
                                     <div class="form-group">
                                         <label for="phoneNumber">Phone Number</label>
-                                        <input type="text" minlength="10" maxlength="10" class="form-control"
-                                            placeholder="Your Phone *" name="phoneNumber" />
+                                        <input type="text" minlength="10" maxlength="10" class="form-control" value="<%= locals.data.phoneNumber %>"
+                                            placeholder="Your Phone *" name="phoneNumber" required />
                                     </div>
                                     <button type="submit" name="button" class="btnRegister">Register</button>
                                 </div>
