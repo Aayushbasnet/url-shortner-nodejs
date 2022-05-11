@@ -22,35 +22,21 @@
  
 
 ## Preview
-* New game. Press New Color to play
-<img src="screenshots/Screenshot 1.png" width="100%" height="500"> &nbsp;
+* Default page of the web app
+<img src="screenshots/screencapture-localhost-5000-2022-05-11-14_27_13.png" width="100%" height="500"> &nbsp;
 ***
-* Select a color to answer.
-<img src="screenshots/Screenshot 2.png" width="100%" height="500"> &nbsp;
+* Login if you are old user to shorten the original url.
+<img src="screenshots/screencapture-localhost-5000-login-2022-05-11-14_27_29.png" width="100%" height="500"> &nbsp;
 ***
-* When the color (answer) you picked is incorrect.
-<img src="screenshots/Screenshot 3.png" width="100%" height="500"> &nbsp;
+* Regsiter if you are new user.
+<img src="screenshots/screencapture-localhost-5000-register-2022-05-11-14_27_55.png" width="100%" height="500"> &nbsp;
 ***
-* When the color (answer) you picked is correct.
-<img src="screenshots/Screenshot 4.png" width="100%" height="500"> &nbsp;
+* Insert your url.
+<img src="screenshots/screencapture-localhost-5000-2022-05-11-14_28_10.png" width="100%" height="500"> &nbsp;
 ***
-* Selecting Easy Mode.
-<img src="screenshots/Screenshot 5.png" width="100%" height="500"> &nbsp;
-***
-* When the color (answer) you select is incorrect.
-<img src="screenshots/Screenshot 6.png" width="100%" height="500"> &nbsp;
-***
-* When the color (answer) you select is correct.
-<img src="screenshots/Screenshot 7.png" width="100%" height="500"> &nbsp;
-***
-* Selecting Hard Mode.
-<img src="screenshots/Screenshot 8.png" width="100%" height="500"> &nbsp;
-***
-* When the color (answer) you select is incorrect.
-<img src="screenshots/Screenshot 9.png" width="100%" height="500"> &nbsp;
-***
-* When the color (answer) you select is correct.
-<img src="screenshots/Screenshot 10.png" width="100%" height="500"> &nbsp;
+* Output (Short url) for your original url.
+<img src="screenshots/screencapture-localhost-5000-2022-05-11-14_28_26.png" width="100%" height="500"> &nbsp;
+
 
 
 
