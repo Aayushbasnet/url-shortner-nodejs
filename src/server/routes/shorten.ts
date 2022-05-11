@@ -16,9 +16,9 @@ router.use(session({
 
 router.post('/', (req, res) => {
     const loggedIn = req.session.loggedIn;
-    const userId = req.session.user.id;
-    console.log(" I am user",userId);
     if(loggedIn == true){
+        const userId = req.session.user.id;
+        console.log(" I am user",userId);
         let originalUrl:string = req.body.userUrl.trim();   //original url from form
         let spaceChecker:RegExp = /\s/gi;
         if(spaceChecker.test(originalUrl)== false){
